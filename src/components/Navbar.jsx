@@ -52,7 +52,7 @@ export default function Navbar() {
                 The Bronze Co
               </span>
               <span className="font-sans text-brown-300 font-bold text-[10px] tracking-widest2 uppercase">
-                Ancient Alloy. Everyday Table.
+                Ancient Alloy, Everyday Table.
               </span>
             </div>
           </a>

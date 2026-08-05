@@ -30,7 +30,7 @@ export default function CollectionModal({ collection, onClose }) {
       />
 
       {/* Panel */}
-      <div className="relative z-10 bg-cream-100 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="relative z-10 bg-cream-100 max-w-4xl w-full rounded-lg max-h-[90vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {/* Header */}
         <div className="bg-brown-800 px-8 py-10 relative">
           <p className="section-label text-brown-300 mb-3">{col.label}</p>
