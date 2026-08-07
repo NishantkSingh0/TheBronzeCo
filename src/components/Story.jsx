@@ -15,13 +15,13 @@ export default function Story() {
 
             <div className="space-y-5 reveal delay-300">
               <p className="body-text">
-                The Bronze Co was founded on a single observation: the most credible Kansa brands
+                The Bronze Co was founded on a single observation: the most credible Bronze brands
                 were priced for collectors, and the most affordable options offered no credible
                 purity assurance. No one was bridging the gap.
               </p>
               <p className="body-text">
                 We built our brand around one proposition ,  <span className="font-medium text-brown-700">
-                verified-pure Kansa, priced for everyday use.</span> Not just for special occasions.
+                verified-pure Bronze, priced for everyday use.</span> Not just for special occasions.
                 Not locked behind collector premiums. For the daily ritual at every Indian table.
               </p>
               <p className="body-text">

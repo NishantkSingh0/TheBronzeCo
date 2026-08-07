@@ -1,4 +1,4 @@
-import { whyKansa } from '../data/collections';
+import { whyBronze } from '../data/collections';
 
 const icons = [
   // Ashtadhatu - dharma wheel
@@ -52,15 +52,15 @@ const icons = [
   </svg>,
 ];
 
-export default function WhyKansa() {
+export default function WhyBronze() {
   return (
-    <section id="why-kansa" className="py-24 px-6 bg-cream-100">
+    <section id="why-bronze" className="py-24 px-6 bg-cream-100">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-16 reveal">
           <p className="section-label mb-4">The Sacred Metal</p>
           <h2 className="section-heading text-brown-800">
-            Why Kansa Belongs<br />
+            Why Bronze Belongs<br />
             <span className="italic font-light text-brown-400">at Your Table</span>
           </h2>
           <span className="divider-line" />
@@ -72,7 +72,7 @@ export default function WhyKansa() {
 
         {/* Cards grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {whyKansa.map((item, i) => (
+          {whyBronze.map((item, i) => (
             <div
               key={i}
               className={`reveal group bg-white border border-cream-300 p-8 hover:border-brown-300 hover:shadow-lg transition-all duration-300 delay-${i * 100}`}
@@ -94,7 +94,7 @@ export default function WhyKansa() {
         <div className="mt-20 text-center reveal">
           <div className="gold-line max-w-xs mx-auto mb-10" />
           <blockquote className="font-serif text-2xl md:text-3xl lg:text-4xl text-brown-700 font-light italic max-w-3xl mx-auto leading-relaxed">
-            "In Ayurveda, Kansa is regarded as a sattvic (pure) metal,
+            "In Ayurveda, Bronze is regarded as a sattvic (pure) metal,
             traditionally favoured for daily dining as part of a mindful,
             balanced way of eating."
           </blockquote>

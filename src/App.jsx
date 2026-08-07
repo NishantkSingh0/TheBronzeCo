@@ -4,7 +4,7 @@ import { useScrollReveal } from './hooks/useScrollReveal';
 import Navbar       from './components/Navbar';
 import Hero         from './components/Hero';
 import Story        from './components/Story';
-import WhyKansa     from './components/WhyKansa';
+import WhyBronze    from './components/WhyBronze';
 import Collections  from './components/Collections';
 import PurityPassport from './components/PurityPassport';
 import Gifting      from './components/Gifting';
@@ -68,7 +68,7 @@ export default function App() {
       <main>
         <Hero />
         <Story />
-        <WhyKansa />
+        <WhyBronze />
         <Collections />
         <PurityPassport />
         <Gifting />

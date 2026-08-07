@@ -3,10 +3,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 // Each block is one "topic" ,  all four lines shown together, top to bottom.
 const BLOCKS = [
   {
-    label: 'Kansa Dinnerware',
+    label: 'Bronze Dinnerware',
     heading: 'Tradition,',
     heading2: 'Served Daily.',
-    sub: 'Timeless Kansa thalis, bowls and glasses crafted to bring the beauty of Indian tradition to your everyday table.',
+    sub: 'Timeless Bronze thalis, bowls and glasses crafted to bring the beauty of Indian tradition to your everyday table.',
   },
   {
     label: 'Marriage Collection',
@@ -21,28 +21,28 @@ const BLOCKS = [
     sub: 'Kalash sets, dinnerware and traditional essentials designed for Griha Pravesh and the first celebrations of a new home.',
   },
   {
-    label: 'Kansa Cookware',
+    label: 'Bronze Cookware',
     heading: 'Crafted to Cook.',
     heading2: 'Made to Endure.',
-    sub: 'Traditional Kansa cookware made for kitchens where heritage, everyday utility and lasting craftsmanship belong together.',
+    sub: 'Traditional Bronze cookware made for kitchens where heritage, everyday utility and lasting craftsmanship belong together.',
   },
   {
     label: 'Festive Collection',
     heading: 'Celebrate',
-    heading2: 'In Kansa.',
+    heading2: 'In Bronze.',
     sub: 'Puja thalis, serving sets and festive essentials created for Dhanteras, Diwali and celebrations throughout the year.',
   },
   {
     label: 'Premium Gifting',
     heading: 'Gift Something',
     heading2: 'Worth Keeping.',
-    sub: 'Thoughtfully curated Kansa gift boxes and hampers for weddings, anniversaries, housewarmings and milestone occasions.',
+    sub: 'Thoughtfully curated Bronze gift boxes and hampers for weddings, anniversaries, housewarmings and milestone occasions.',
   },
   {
-    label: 'Personalised Kansa',
+    label: 'Personalised Bronze',
     heading: 'Made Special.',
     heading2: 'Made Personal.',
-    sub: 'Personalised Kansa pieces engraved with names or dates, turning traditional serveware into meaningful keepsakes.',
+    sub: 'Personalised Bronze pieces engraved with names or dates, turning traditional serveware into meaningful keepsakes.',
   },
   {
     label: 'Corporate Gifting',
@@ -52,9 +52,9 @@ const BLOCKS = [
   },
   {
     label: 'Everyday Essentials',
-    heading: 'Not Just Occasions.',
-    heading2: 'Every Single Day.',
-    sub: 'Kansa glasses, bowls and complete dinner sets designed to bring traditional metalware into the modern everyday home.',
+    heading: 'Beyond Occasions.',
+    heading2: 'Daily Rituals.',
+    sub: 'Bronze glasses, bowls and complete dinner sets designed to bring traditional metalware into the modern everyday home.',
   },
   {
     label: 'Handcrafted Bell Metal',
@@ -239,12 +239,12 @@ export default function Hero() {
 
         {/* Heading line 1 */}
         <h1 className="font-serif font-light text-cream-100 leading-tight">
-          <span className="block text-4xl md:text-5xl lg:text-8xl min-h-[1.15em]">
+          <span className="block text-3xl md:text-4xl lg:text-8xl min-h-[1.15em]">
             {heading}<Caret field="heading" />
           </span>
 
           {/* Heading line 2 ,  shimmer */}
-          <span className="block text-4xl md:text-5xl lg:text-8xl shimmer-text min-h-[1.15em]">
+          <span className="block text-3xl md:text-4xl lg:text-8xl shimmer-text min-h-[1.15em]">
             {heading2}<Caret field="heading2" />
           </span>
         </h1>
@@ -268,9 +268,9 @@ export default function Hero() {
           </button>
           <button
             className="font-sans text-xs tracking-widest2 uppercase text-brown-300 hover:text-cream-100 transition-colors duration-200 py-3.5 flex items-center gap-2 justify-center"
-            onClick={() => scrollTo('#why-kansa')}
+            onClick={() => scrollTo('#why-bronze')}
           >
-            Why Kansa
+            Why Bronze
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
             </svg>

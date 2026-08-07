@@ -166,10 +166,10 @@ export const collections = [
   },
 ];
 
-export const whyKansa = [
+export const whyBronze = [
   {
     title: 'One of the Ashtadhatu',
-    body: 'In Indian tradition, Kansa is considered one of the eight sacred metals referenced in scripture ,  its presence in a home has long been read as a marker of prosperity and purity.',
+    body: 'In Indian tradition, Bronze is considered one of the eight sacred metals referenced in scripture ,  its presence in a home has long been read as a marker of prosperity and purity.',
   },
   {
     title: 'The Sound of the Sacred',
@@ -177,11 +177,11 @@ export const whyKansa = [
   },
   {
     title: 'A Sattvic Choice',
-    body: 'In Ayurveda, kansa is regarded as a sattvic (pure) metal, traditionally favoured for daily dining as part of a mindful, balanced way of eating.',
+    body: 'In Ayurveda, bronze is regarded as a sattvic (pure) metal, traditionally favoured for daily dining as part of a mindful, balanced way of eating.',
   },
   {
     title: 'Griha Pravesh Blessings',
-    body: 'Entering a new home with a sacred kalash is central to griha pravesh rituals ,  kansa vessels are traditionally gifted to bless a new household.',
+    body: 'Entering a new home with a sacred kalash is central to griha pravesh rituals ,  bronze vessels are traditionally gifted to bless a new household.',
   },
   {
     title: 'The Dhanteras Ritual',
