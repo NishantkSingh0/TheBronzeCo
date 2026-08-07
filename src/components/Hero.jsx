@@ -17,7 +17,7 @@ const BLOCKS = [
   {
     label: 'Housewarming Collection',
     heading: 'A New Home.',
-    heading2: 'An Auspicious Beginning.',
+    heading2: 'Divine Welcome',
     sub: 'Kalash sets, dinnerware and traditional essentials designed for Griha Pravesh and the first celebrations of a new home.',
   },
   {
@@ -212,7 +212,7 @@ export default function Hero() {
 
       {/* Decorative rings */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[650px] h-[650px] rounded-full border border-brown-300/15  absolute" />
+        <div className="w-[670px] h-[670px] rounded-full border border-brown-300/15  absolute" />
       </div>
 
       {/* Watermark */}
