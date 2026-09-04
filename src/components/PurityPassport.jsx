@@ -24,12 +24,6 @@ export default function PurityPassport() {
 
   return (
     <section id="purity" className="py-28 px-6 bg-brown-900 overflow-hidden relative">
-      {/* Background watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <p className="font-serif text-[18vw] font-light text-white/[0.02] whitespace-nowrap">
-          Purity
-        </p>
-      </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
