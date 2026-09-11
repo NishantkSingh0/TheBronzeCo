@@ -13,6 +13,7 @@ import CareNote     from './components/CareNote';
 import Testimonials from './components/Testimonials';
 import Contact      from './components/Contact';
 import Footer       from './components/Footer';
+import ChatBot      from './components/ChatBot';
 
 // Custom cursor
 function Cursor() {
@@ -79,6 +80,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <ChatBot />
     </>
   );
 }
