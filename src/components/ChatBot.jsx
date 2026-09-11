@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const CHAT_ENDPOINT = `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/api/chat/`;
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
+const CHAT_ENDPOINT = `${API_BASE_URL}/api/chat/`;
 const MAX_HISTORY_MESSAGES = 6;
 
 async function consumeChatStream(response, onEvent) {

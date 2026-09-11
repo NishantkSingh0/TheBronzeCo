@@ -23,6 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 *.xlsx
+.env
+!.env.example
 
 # Django backend
 backend/.env
