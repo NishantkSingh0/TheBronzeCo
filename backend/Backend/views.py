@@ -28,14 +28,12 @@ def chat_stream(request):
             for chunk in GeminiService().stream(user_message, context):
                 yield stream_event('chunk', chunk)
             yield stream_event('done')
-        except ImportError:
-            yield stream_event(
-                'error',
-                'Google Generative AI package is not installed. '
-                'Run: pip install google-generativeai',
-            )
+        except ImportError as e:
+            yield stream_event('error', f'Import error: {str(e)}')
         except Exception as error:
-            yield stream_event('error', str(error))
+            import traceback
+            error_details = f"{str(error)}\n{traceback.format_exc()}"
+            yield stream_event('error', error_details)
 
     return StreamingHttpResponse(
         generate_response(),
