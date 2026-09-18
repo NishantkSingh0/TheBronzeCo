@@ -46,308 +46,152 @@ function formatConversationContext(history) {
     .join('\n');
 }
 
-const bronze_facts = [
-    'Do you know bronze is a family of copper-based alloys rather than one single fixed composition?',
-    'Did you know traditional tin bronze is primarily copper with tin added?',
-    'Have you ever wondered why bronze is often described as an alloy instead of a pure metal?',
-    'Do you know the composition of bronze can be changed to emphasize strength, wear resistance, corrosion resistance, or casting behavior?',
-    'Did you know some standardized tin bronzes contain roughly 6–20% tin, depending on the grade?',
-    'Have you wondered why two objects both called bronze can behave very differently?',
-    'Do you know lead, zinc, nickel, aluminum, iron, phosphorus, or silicon can be added to different bronze families?',
-    "Did you know adding an alloying element can change bronze's hardness and mechanical strength?",
-    'Have you ever wondered why bronze can have very different colors?',
-    'Do you know bronze can range from reddish tones to golden and lighter hues depending on composition and surface condition?',
-    'Did you know tin gives copper-tin bronze a characteristic golden appearance when the surface is freshly exposed?',
-    'Have you wondered why an old bronze statue may look green even though the underlying metal is copper-rich?',
-    'Do you know the green surface on many outdoor bronzes is called patina?',
-    'Did you know patina is made from corrosion products rather than a new decorative paint?',
-    'Have you ever wondered whether a green bronze surface means the metal is completely protected?',
-    'Do you know conservation research shows that bronze corrosion can continue underneath or through a patina?',
-    'Did you know acidic environmental conditions can accelerate corrosion of outdoor bronze?',
-    'Have you wondered why conservators avoid aggressive cleaning of historic bronze?',
-    'Do you know abrasive cleaning can remove original surface metal and sculptural detail?',
-    'Did you know conservation treatments are often designed to be as minimal and reversible as practical?',
-    'Have you wondered why a conservator may deliberately leave some patina on an old bronze object?',
-    'Do you know bronze has survived in archaeological contexts for thousands of years?',
-    'Did you know the durability of ancient bronze is one reason museums still hold large collections of bronze artifacts?',
-    'Have you wondered why bronze became important enough to give an entire archaeological period its name?',
-    'Do you know the Bronze Age is named for the widespread technological importance of bronze?',
-    'Did you know bronze technology transformed tools, weapons, agriculture, and ceremonial objects in many ancient societies?',
-    'Have you wondered why the invention of bronze was more than just a new material?',
-    'Do you know bronze production required knowledge of mining, ore processing, high-temperature furnaces, alloying, casting, and finishing?',
-    'Did you know ancient bronze production could involve many specialized workers?',
-    'Have you wondered what a bronze workshop tells archaeologists about the organization of an ancient society?',
-    'Do you know ancient Chinese bronze workshops involved mining, smelting, mold making, casting, and finishing?',
-    'Did you know some early Chinese bronze foundries operated around 1700 BCE?',
-    'Have you wondered why bronze technology could create major economic and political changes?',
-    'Do you know bronze tools could replace or outperform some stone tools for particular tasks?',
-    'Did you know durable bronze weapons could reshape military technology?',
-    'Have you wondered why bronze became strongly associated with elite power and ritual in several ancient cultures?',
-    'Do you know ancient Chinese bronze vessels were often connected with ancestor and religious ceremonies?',
-    'Did you know some Chinese bronze vessels were buried with elites for use in the afterlife?',
-    'Have you wondered why ancient bronzes sometimes carry inscriptions?',
-    'Do you know inscriptions on ancient bronze objects can preserve information about rulers, events, ownership, or ritual use?',
-    'Did you know bronze objects can be archaeological evidence for ancient trade networks?',
-    'Have you wondered why tin was especially important to ancient bronze-making regions?',
-    'Do you know tin and copper deposits are not always located near each other?',
-    'Did you know ancient merchants could transport tin over long distances to support bronze production?',
-    'Have you wondered how archaeologists reconstruct ancient metal trade?',
-    'Do you know chemical analysis of bronze can help researchers study its composition and production history?',
-    'Did you know trace elements can sometimes provide clues about the ores used to make an ancient alloy?',
-    'Have you wondered why an ancient bronze object can contain evidence of its manufacturing process?',
-    'Do you know casting defects, inclusions, seams, and microstructure can reveal how a bronze object was made?',
-    'Did you know different civilizations developed different bronze casting traditions?',
-    'Have you wondered why early Chinese bronze casting often differed from Mediterranean lost-wax casting?',
-    'Do you know early Chinese bronze vessels were commonly made using piece-mold techniques?',
-    'Did you know piece molds could be assembled around a core before molten bronze was poured?',
-    'Have you wondered how ancient craftsmen created complicated decoration directly in a mold?',
-    'Do you know lost-wax casting begins with a model made from wax or another suitable material?',
-    'Did you know the wax model is encased in a refractory material before the wax is removed?',
-    'Have you wondered why lost-wax casting is also called cire perdue?',
-    'Do you know heating the mold can melt or burn out the wax and leave a cavity?',
-    'Did you know molten bronze can then fill that cavity to reproduce the model?',
-    'Have you wondered why lost-wax casting is especially useful for intricate sculptural forms?',
-    'Do you know wax can be shaped and modified before metal is cast?',
-    'Did you know lost-wax molds are commonly destroyed when the casting is removed?',
-    'Have you wondered why this can make each casting technically unique?',
-    'Do you know bronze casting can reproduce very fine surface details?',
-    'Did you know ancient craftsmen used bronze for objects with complex geometric and animal decoration?',
-    'Have you wondered how ancient artisans achieved such precise patterns without modern machinery?',
-    'Do you know some ancient Chinese bronzes show extremely sophisticated mold-making techniques?',
-    'Did you know bronze casting could require temperatures around 1,000°C or more depending on the alloy and process?',
-    'Have you wondered why controlling heat was such a major challenge for ancient metalworkers?',
-    'Do you know molten metal must flow through a mold before solidifying?',
-    'Did you know mold design influences whether a bronze casting fills completely?',
-    'Have you wondered why casting channels and vents matter?',
-    'Do you know trapped air can interfere with complete filling of a mold?',
-    'Did you know ancient casting methods sometimes used runners and openings to manage molten metal flow?',
-    'Have you wondered why large bronze sculptures are sometimes cast in multiple pieces?',
-    'Do you know large bronze components can be assembled after separate castings are completed?',
-    'Did you know historical foundries used specialized pits, furnaces, molds, and finishing areas?',
-    'Have you wondered why bronze casting was both an artistic and engineering discipline?',
-    'Do you know bronze can be finished by grinding, chasing, polishing, or other surface-working methods?',
-    'Did you know cold-working can change the surface and mechanical condition of some bronze alloys?',
-    'Have you wondered why the same bronze object can contain both cast and worked sections?',
-    'Do you know ancient Greek bronze vessels sometimes combined casting with hammered sheet-metal techniques?',
-    'Did you know bronze vessels could have cast handles attached to hammered bodies?',
-    'Have you wondered why thin bronze sheets can disappear archaeologically while thicker cast parts survive?',
-    'Do you know burial environments can corrode bronze differently depending on soil chemistry?',
-    'Did you know archaeological bronze is not necessarily chemically identical to the alloy originally cast?',
-    'Have you wondered how corrosion can change the chemistry of an ancient bronze surface?',
-    "Do you know conservation scientists can study corrosion layers to understand an artifact's history?",
-    'Did you know chloride contamination can be especially troublesome for archaeological copper alloys?',
-    'Have you wondered why conservators worry about active corrosion rather than only appearance?',
-    'Do you know bronze disease is a term used for destructive chloride-related corrosion in archaeological copper alloys?',
-    'Did you know active corrosion can continue when environmental conditions allow electrochemical reactions?',
-    'Have you wondered why stable storage conditions are important for museum bronze?',
-    'Do you know humidity and contaminants can influence corrosion behavior?',
-    'Did you know outdoor bronze is exposed to rain, pollutants, salts, dust, and changing humidity?',
-    'Have you wondered why bronze monuments in different cities can age differently?',
-    'Do you know air pollution can influence the chemistry of bronze patinas?',
-    'Did you know sulfur-containing pollutants can contribute to bronze corrosion products?',
-    'Have you wondered why a bronze statue may develop different colors in different environments?',
-    'Do you know patina chemistry depends on the surrounding environment as well as the alloy?',
-    'Did you know copper carbonates and sulfates can occur among the corrosion products on outdoor bronze?',
-    'Have you wondered why a bronze surface can change color without the object being repainted?',
-    'Do you know some artists intentionally develop or accelerate bronze patinas?',
-    'Did you know artificial patination can create colors that range from brown to green and other shades?',
-    'Have you wondered why bronze conservators document surface appearance before treatment?',
-    'Do you know aggressive blasting can remove both corrosion products and original surface material?',
-    'Did you know softer blasting media can sometimes clean bronze while preserving more of its existing surface?',
-    'Have you wondered why conservation is not simply about making an old bronze look new?',
-    "Do you know historical surface layers can themselves be part of an object's evidence and appearance?",
-    'Did you know bronze is valued for its casting characteristics in modern engineering?',
-    'Have you wondered why bronze remains useful even after the development of steel and advanced plastics?',
-    'Do you know tin bronze grades are used for engineering components such as bearings and other wear-related parts?',
-    'Did you know some bronze alloys are selected for their resistance to wear and friction?',
-    'Have you wondered why bronze is often used where moving metal parts contact each other?',
-    'Do you know bronze can provide useful bearing performance under appropriate lubrication and operating conditions?',
-    'Did you know bearing bronzes come in several composition families?',
-    'Have you wondered why engineers do not use one bronze alloy for every bearing?',
-    'Do you know leaded tin bronzes are one important family of bearing materials?',
-    'Did you know some bearing bronzes combine copper, tin, lead, and zinc in controlled proportions?',
-    "Have you wondered why small composition changes can alter an alloy's engineering behavior?",
-    'Do you know standardized bronze grades can have specified tensile strength, yield strength, elongation, and hardness?',
-    'Did you know the same bronze chemistry can have different properties depending on casting method and processing?',
-    'Have you wondered why engineering specifications matter when choosing bronze?',
-    'Do you know continuous casting, centrifugal casting, sand casting, and permanent-mold casting can produce different properties?',
-    'Did you know centrifugal casting is used for some cylindrical bronze components?',
-    'Have you wondered why bronze bearings can be manufactured as bushes, sleeves, and other shapes?',
-    'Do you know bronze can be machined after casting to achieve precise dimensions?',
-    'Did you know bronze is used for gears and other mechanical components in selected applications?',
-    'Have you wondered why bronze gears can be useful in systems where wear and friction are concerns?',
-    'Do you know bronze can offer good resistance to galling in some applications?',
-    'Did you know galling is a form of adhesive wear that can occur when sliding metal surfaces interact?',
-    'Have you wondered why material selection is critical for shafts, bearings, and gears?',
-    'Do you know bronze and steel can be paired in mechanical systems because their properties can complement each other?',
-    'Did you know bronze is used in some valves and pumps?',
-    'Have you wondered why bronze appears in plumbing and fluid-handling equipment?',
-    'Do you know certain bronze grades are designed for pressure-containing valve and fitting applications?',
-    'Did you know marine engineering is one of the major modern fields for specialized bronzes?',
-    'Have you wondered why bronze has a long history in marine hardware?',
-    'Do you know silicon bronze has very good seawater corrosion resistance?',
-    'Did you know silicon bronze is used for marine screws, bolts, washers, pins, and fasteners?',
-    'Have you wondered why silicon bronze is popular in wooden boat construction?',
-    'Do you know silicon bronze can offer good weldability compared with many other copper alloys?',
-    'Did you know silicon bronze can combine corrosion resistance with useful mechanical strength?',
-    'Have you wondered why marine engineers care about both corrosion and mechanical properties?',
-    'Do you know nickel-aluminum bronze is widely used in marine applications?',
-    'Did you know nickel-aluminum bronze is used for ship propellers?',
-    'Have you wondered why propellers need resistance to cavitation and erosion?',
-    'Do you know nickel-aluminum bronze can provide strong resistance to cavitation in suitable conditions?',
-    'Did you know aluminum bronzes are used for valves, fittings, pumps, shafts, and heat-exchanger waterboxes?',
-    'Have you wondered why aluminum bronze can be attractive for demanding marine components?',
-    'Do you know aluminum bronze can combine mechanical strength with corrosion resistance?',
-    'Did you know the microstructure of a bronze alloy can strongly influence its corrosion and mechanical performance?',
-    'Have you wondered why two castings with similar chemistry can behave differently?',
-    'Do you know heat treatment and cooling history can influence bronze microstructure?',
-    'Did you know cold working can increase strength in some bronze alloys?',
-    'Have you wondered why engineers specify both alloy composition and processing condition?',
-    'Do you know phosphor bronze is another important bronze family?',
-    'Did you know phosphorus additions can influence the properties of copper-tin alloys?',
-    'Have you wondered why phosphor bronze is widely associated with springs and electrical contacts?',
-    'Do you know phosphor bronze can provide a useful combination of strength and electrical conductivity?',
-    'Did you know spring-tempered phosphor bronze can achieve high strength through cold working?',
-    'Have you wondered why a spring material needs both strength and resistance to fatigue?',
-    'Do you know bronze alloys are used in electrical connectors and contacts?',
-    'Did you know bronze generally conducts electricity less effectively than pure copper?',
-    'Have you wondered why engineers sometimes accept lower conductivity in exchange for greater mechanical strength?',
-    'Do you know alloying copper can improve strength while reducing electrical conductivity?',
-    'Did you know phosphor bronze grades can retain useful electrical conductivity while offering much higher strength than pure copper?',
-    'Have you wondered why connectors need resistance to mechanical deformation?',
-    'Do you know electrical contacts may require a balance of conductivity, spring force, wear resistance, and corrosion resistance?',
-    "Did you know bronze's electrical properties vary considerably among alloy families?",
-    'Have you wondered why the word bronze alone is not enough to predict electrical performance?',
-    'Do you know some bronze alloys are chosen for their spring properties rather than their appearance?',
-    'Did you know bronze can be used for fasteners where corrosion resistance and mechanical properties are important?',
-    'Have you wondered why bronze screws can be valuable in marine environments?',
-    'Do you know silicon bronze fasteners are common in certain boatbuilding applications?',
-    'Did you know bronze can be easier to work with than some high-strength steels in particular fabrication processes?',
-    'Have you wondered why machinability can matter as much as strength when selecting a material?',
-    'Do you know some bronze alloys contain lead specifically to improve machining or bearing behavior?',
-    'Did you know leaded bronzes are subject to different health and regulatory considerations than lead-free bronzes?',
-    "Have you wondered why the alloy's exact composition matters when an object may contact food or drinking water?",
-    'Do you know not every bronze alloy should automatically be assumed suitable for food contact?',
-    'Did you know some historical bronze objects were vessels, but historical use does not by itself prove modern food-contact safety?',
-    'Have you wondered why a decorative bronze vessel should not automatically be treated as cookware?',
-    'Do you know modern food-contact suitability depends on the specific alloy, manufacturing process, surface condition, and applicable regulations?',
-    'Did you know copper alloys can release metal ions into water under some conditions?',
-    'Have you wondered why water chemistry matters when copper-based alloys contact drinking water?',
-    'Do you know acidic or otherwise aggressive water can increase copper corrosion?',
-    'Did you know hot water can dissolve copper more readily than cold water in plumbing systems?',
-    'Have you wondered why material safety should be judged from the exact product rather than simply from the word bronze?',
-    'Do you know bronze is not inherently a medical or nutritional treatment?',
-    'Did you know the presence of copper in bronze does not mean every bronze object provides a useful dietary copper source?',
-    'Have you wondered why traditional claims about metal vessels should be separated from laboratory evidence?',
-    "Do you know bronze's historical importance does not automatically establish health benefits for every modern bronze utensil?",
-    'Did you know some bronze objects may contain alloying elements that make them inappropriate for certain uses?',
-    'Have you wondered why identifying the alloy grade is important before using bronze for food, water, or sensitive applications?',
-    'Do you know bronze mirrors were made in several ancient cultures?',
-    'Did you know ancient Chinese bronze mirrors could have highly polished reflective surfaces?',
-    'Have you wondered how a metal alloy could function as a mirror before modern glass mirrors?',
-    'Do you know polishing can make a bronze surface highly reflective?',
-    'Did you know ancient bronze vessels could be both functional objects and symbols of status?',
-    'Have you wondered why bronze became so closely connected with ceremonial life?',
-    'Do you know ancient Chinese ritual bronzes could be used in offerings of food and wine to ancestors or deities?',
-    'Did you know the production of elaborate bronzes required significant organization of labor?',
-    'Have you wondered what the sheer number of surviving ancient bronzes tells us about historical workshops?',
-    'Do you know bronze artifacts can reveal ancient social hierarchies as well as technical skills?',
-    'Did you know elite tombs sometimes contained large collections of bronze vessels?',
-    'Have you wondered why bronze was valuable enough to accompany rulers and nobles into tombs?',
-    'Do you know bronze could serve as a medium for recording political or religious information through inscriptions?',
-    'Did you know some bronze inscriptions are important historical documents?',
-    'Have you wondered why archaeologists study both the object and its inscription?',
-    'Do you know ancient bronze technology was connected to long-distance trade in raw materials?',
-    'Did you know tin could be traded across large regions because it was needed for bronze production?',
-    'Have you wondered why control of metal resources could influence political power?',
-    'Do you know metalworking centers could become economically and politically important?',
-    'Did you know bronze production required access to fuel as well as ore?',
-    'Have you wondered why ancient metallurgy depended on forests and other fuel resources?',
-    'Do you know smelting and casting required substantial heat management?',
-    'Did you know ancient metalworkers had to control furnace temperatures without modern thermometers?',
-    'Have you wondered how they judged whether a metal was hot enough to cast?',
-    'Do you know practical knowledge could be transmitted through generations of metalworking specialists?',
-    'Did you know bronze technology was not a single invention that appeared everywhere at the same moment?',
-    'Have you wondered why different regions entered their Bronze Ages at different times?',
-    'Do you know the chronology of bronze use varies greatly across regions?',
-    'Did you know China, the Mediterranean, South Asia, and other regions developed distinctive bronze traditions?',
-    'Have you wondered why archaeological labels such as Bronze Age can hide enormous regional differences?',
-    'Do you know India has a very old history of copper and bronze metallurgy?',
-    'Did you know bronze objects occur in archaeological traditions of the Indian subcontinent?',
-    'Have you wondered how metallurgy contributed to the development of early South Asian societies?',
-    'Do you know the exact composition of an archaeological Indian bronze can help researchers understand its production technology?',
-    'Did you know bronze artifacts can preserve evidence of casting, hammering, polishing, and finishing?',
-    'Have you wondered why archaeologists examine tool marks on ancient bronze?',
-    'Do you know manufacturing marks can help distinguish different stages of production?',
-    'Did you know mold seams can sometimes remain visible on cast bronze objects?',
-    'Have you wondered why casting seams can be valuable evidence rather than just imperfections?',
-    'Do you know bronze objects can be repaired after casting?',
-    'Did you know ancient metalworkers sometimes assembled multiple cast components into one object?',
-    'Have you wondered why some bronze sculptures have internal armatures or joins?',
-    'Do you know modern monumental bronze sculptures may also be assembled from multiple cast sections?',
-    'Did you know large bronze sculptures are often hollow rather than solid?',
-    'Have you wondered why hollow construction dramatically reduces the amount of metal required for a large sculpture?',
-    'Do you know hollow bronze sculptures can still be structurally strong when properly engineered?',
-    'Did you know modern foundries can use ceramic shells, wax models, cores, vents, and gates to produce large bronzes?',
-    'Have you wondered why a bronze sculpture can require extensive finishing after casting?',
-    'Do you know casting may leave sprues, gates, seams, and surface irregularities that must be removed?',
-    'Did you know chasing is used to refine and detail bronze surfaces after casting?',
-    'Have you wondered why the final surface of a bronze sculpture can be almost as important as the casting itself?',
-    'Do you know bronze sculptures can be chemically patinated after casting?',
-    'Did you know wax coatings are commonly used in the conservation of outdoor bronze sculpture?',
-    'Have you wondered why conservators may periodically renew protective coatings?',
-    'Do you know protective coatings can reduce direct exposure of bronze to environmental contaminants?',
-    'Did you know coating systems need maintenance because outdoor exposure can degrade them over time?',
-    'Have you wondered why bronze monuments require conservation even though bronze is considered durable?',
-    'Do you know durable does not mean corrosion-proof?',
-    'Did you know bronze can corrode faster in aggressive environments than people often expect?',
-    'Have you wondered why coastal salt, industrial pollution, and acidic rain can be concerns for bronze?',
-    'Do you know chloride-rich environments can be particularly challenging for copper alloys?',
-    'Did you know marine bronze selection is based on the specific water chemistry and mechanical conditions?',
-    'Have you wondered why seawater resistance does not mean immunity to every marine corrosion mechanism?',
-    'Do you know nickel-aluminum bronze can suffer localized corrosion under unfavorable conditions despite its strong reputation?',
-    'Did you know alloy microstructure and service conditions both influence corrosion performance?',
-    'Have you wondered why engineers test materials rather than relying only on general alloy names?',
-    'Do you know bronze can be recyclable because copper alloys can be melted and remade into new products?',
-    "Did you know copper-based alloys can retain significant material value at the end of a product's life?",
-    'Have you wondered why copper recycling has been important for centuries?',
-    'Do you know ancient people sometimes recycled bronze objects by melting them down?',
-    'Did you know recycled metal can become part of new bronze objects?',
-    'Have you wondered how recycling can complicate the archaeological story of an ancient bronze?',
-    'Do you know an archaeological bronze may contain copper and tin that came through multiple cycles of use and recycling?',
-    'Did you know metal recycling can reduce the need for newly mined material when collection and processing are effective?',
-    'Have you wondered why bronze has remained economically valuable after thousands of years?',
-    "Do you know copper's intrinsic material value contributes to the recyclability of many bronze products?",
-    'Did you know recycling a bronze component can recover copper and other alloying elements?',
-    'Have you wondered why identifying alloy composition can matter for efficient recycling?',
-    'Do you know mixed copper-alloy scrap may require sorting before it can be converted into controlled new alloys?',
-    'Did you know modern standards classify many bronze compositions using numerical alloy designations?',
-    'Have you wondered why engineers use standardized alloy numbers instead of relying only on names such as bronze?',
-    'Do you know the Unified Numbering System includes many cast bronze grades?',
-    'Did you know tin bronze grades can have different copper and tin ranges?',
-    'Have you wondered why some grades include small amounts of zinc, lead, nickel, iron, or phosphorus?',
-    'Do you know alloy standards can specify maximum impurity levels?',
-    'Did you know mechanical-property tables can distinguish tensile strength, yield strength, elongation, hardness, and fatigue strength?',
-    'Have you wondered why hardness alone cannot tell you whether a bronze is suitable for an application?',
-    'Do you know fatigue strength matters when a component experiences repeated loading?',
-    'Did you know elongation provides information about how much a material can deform before fracture in a tensile test?',
-    'Have you wondered why designers need several material properties rather than one headline number?',
-    'Do you know bronze performance depends on temperature, loading, environment, manufacturing process, and geometry?',
-    'Did you know material data measured at room temperature may not predict every real-world service condition?',
-    'Have you wondered why engineering handbooks always specify test conditions?',
-    'Do you know bronze can perform differently as a cast material versus a cold-worked material?',
-    'Did you know cold work can increase strength but may reduce ductility in some copper alloys?',
-    'Have you wondered why heat treatment and annealing can be used to modify copper-alloy properties?',
-    'Do you know bronze selection is often a compromise between strength, ductility, conductivity, corrosion resistance, wear, cost, and manufacturability?',
-    'Did you know there is no single bronze that is best for every application?',
-    'Have you wondered why a sculptor and a marine engineer can both choose bronze for completely different reasons?',
-    'Do you know artists value bronze for its casting flexibility and surface possibilities?',
-    'Did you know engineers may value bronze for wear, corrosion resistance, or bearing behavior?',
-    'Have you wondered why architects use bronze for doors, hardware, façades, plaques, and decorative details?',
-    'Do you know bronze can develop a distinctive appearance as it ages outdoors?',
-    'Did you know architects sometimes design specifically for the natural aging of bronze surfaces?',
-    'Have you wondered why an architect might prefer a material that changes appearance over time?',
-];
+  const bronze_facts = [
+    // 🪔 HERITAGE & CULTURE
+
+    'Did you know bronze has been used for sacred objects and vessels in India for centuries?',
+    'Have you ever wondered why bronze has remained part of Indian पूजा traditions for generations?',
+    'Did you know bronze vessels are found among the ancient metal traditions of the Indian subcontinent?',
+    'Did you know bronze was valuable enough in ancient societies to be used for ceremonial and royal objects?',
+    'Have you noticed how traditional bronze objects can make a पूजा space feel more timeless?',
+    'Did you know many traditional Indian metal crafts are built around skills passed from one generation of artisans to another?',
+    'Have you ever wondered why traditional bronze vessels often have designs that look simple but take considerable skill to create?',
+    'Did you know the beauty of a handcrafted bronze piece comes from both the material and the artisan’s finishing work?',
+    'Have you wondered why traditional metal vessels often become family heirlooms rather than everyday replacements?',
+    'Did you know bronze objects can carry both functional and cultural value at the same time?',
+
+    // 🪔 POOJA & SPIRITUAL USE
+
+    'Did you know bronze has a long association with traditional पूजा vessels and ritual objects?',
+    'Have you ever noticed how bronze looks especially beautiful beside flowers, diyas, and पूजा decorations?',
+    'Did you know the warm golden-brown appearance of bronze naturally complements traditional पूजा settings?',
+    'Have you wondered why metal पूजा vessels remain popular even when modern alternatives are easily available?',
+    'Did you know a well-crafted bronze पूजा vessel can become part of a family’s festive traditions for years?',
+    'Have you ever thought about giving a traditional bronze vessel as a housewarming or festive gift?',
+    'Did you know bronze can bring a traditional character to a पूजा room without looking overly decorative?',
+    'Have you wondered why traditional vessels often become part of memories associated with festivals and family पूजा?',
+    'Did you know the same bronze vessel can move from everyday पूजा use to special occasions and festivals?',
+    'Have you ever noticed how bronze looks different under diya light compared with bright indoor lighting?',
+
+    // ✨ BEAUTY & AGING
+
+    'Did you know bronze does not have to stay perfectly shiny to remain beautiful?',
+    'Have you wondered why an older bronze object can sometimes look more beautiful than a brand-new one?',
+    'Did you know bronze develops a natural surface character as it ages?',
+    'Have you noticed the rich brown and golden tones that can appear on aged bronze?',
+    'Did you know the changing appearance of bronze is one reason architects and designers love the material?',
+    'Have you wondered why bronze can become part of the character of a home rather than simply another decoration?',
+    'Did you know two bronze pieces can develop slightly different appearances over time?',
+    'Have you ever noticed how bronze looks warmer as its surface develops character?',
+    'Did you know patina is a natural surface layer formed through interaction with the environment?',
+    'Have you wondered why collectors often prefer preserving an original bronze surface instead of making it look brand new?',
+    'Did you know aggressive polishing can remove some of the surface character that makes an older bronze object unique?',
+    'Have you ever wondered why some bronze owners deliberately preserve the aged look of their pieces?',
+
+    // 🛠️ CRAFTSMANSHIP
+
+    'Did you know creating a bronze object can involve casting, finishing, polishing, and detailed surface work?',
+    'Have you wondered how a craftsman turns molten metal into a detailed vessel?',
+    'Did you know bronze casting can reproduce surprisingly fine decorative details?',
+    'Have you ever looked at a traditional bronze vessel and wondered how its curves were created?',
+    'Did you know the final beauty of a bronze object depends heavily on finishing after casting?',
+    'Have you wondered why handmade bronze pieces can have tiny differences from one another?',
+    'Did you know those small differences can be evidence of handcrafted production rather than factory uniformity?',
+    'Have you ever noticed tiny variations in texture or finish on a handcrafted metal piece?',
+    'Did you know traditional metalworking can require years of practical experience to master?',
+    'Have you wondered why the same design can look completely different depending on the artisan’s finishing technique?',
+    'Did you know chasing and polishing can dramatically change the appearance of a cast bronze surface?',
+    'Have you ever wondered why the finishing stage can take almost as much attention as the casting itself?',
+
+    // 💪 DURABILITY & LONG-TERM VALUE
+
+    'Did you know bronze has survived in archaeological objects for thousands of years?',
+    'Have you ever wondered what makes bronze capable of lasting for generations?',
+    'Did you know bronze is valued for its combination of durability and distinctive appearance?',
+    'Have you wondered why bronze is still used today despite the availability of modern materials?',
+    'Did you know a properly cared-for bronze object can remain part of a home for decades?',
+    'Have you ever thought about buying something once that your family can keep for years?',
+    'Did you know bronze can be both a functional object and a long-lasting decorative piece?',
+    'Have you wondered why bronze is often chosen for objects that are meant to age rather than be replaced?',
+    'Did you know bronze can be repaired or refinished in many situations instead of simply being discarded?',
+    'Have you ever wondered why traditional metal objects are often passed from parents to children?',
+
+    // 🏡 HOME & INTERIOR
+
+    'Did you know bronze can work surprisingly well in both traditional and modern interiors?',
+    'Have you noticed how a single bronze object can add warmth to a minimalist room?',
+    'Did you know bronze pairs naturally with wood, stone, marble, and warm-colored interiors?',
+    'Have you wondered why bronze looks equally natural in a traditional home and a contemporary space?',
+    'Did you know architects use bronze for doors, hardware, plaques, façades, and decorative details?',
+    'Have you ever considered using bronze as an accent instead of filling a room with decorations?',
+    'Did you know the natural aging of bronze can make an interior piece look more distinctive over time?',
+    'Have you wondered why bronze often looks better under warm lighting than under harsh white light?',
+    'Did you know bronze can add a sense of warmth without relying on bright colors?',
+    'Have you ever noticed how bronze, wood, and natural stone create a timeless combination?',
+
+    // 🎁 GIFTING
+
+    'Have you ever wondered why a handcrafted bronze piece can make a more memorable gift than something mass-produced?',
+    'Did you know traditional bronze vessels can work as gifts for housewarmings, weddings, festivals, and पूजा spaces?',
+    'Have you ever thought about gifting something that can remain in a family for generations?',
+    'Did you know a bronze gift can carry both practical and cultural meaning?',
+    'Have you wondered why traditional metalware often becomes more meaningful after years of use?',
+    'Did you know the story behind a handcrafted object can make the gift itself more personal?',
+    'Have you ever received a traditional object that became part of your family’s memories?',
+
+    // 🌱 RECYCLING & SUSTAINABILITY
+
+    'Did you know copper-based alloys such as bronze can be recycled and remade into new products?',
+    'Have you ever wondered why bronze can retain material value even after decades of use?',
+    'Did you know copper alloys have been recycled by people for centuries?',
+    'Have you wondered what happens to an old bronze object when it is no longer wanted?',
+    'Did you know recycling bronze can recover valuable copper and other alloying metals?',
+    'Have you ever thought about how a metal object can have more than one lifetime?',
+
+    // 🔍 BUYING & AUTHENTICITY
+
+    'Did you know the word “bronze” alone does not tell you exactly what alloy a product contains?',
+    'Have you ever wondered why two products sold as bronze can look and behave differently?',
+    'Did you know the quality of a bronze product depends on more than just its appearance?',
+    'Have you wondered why craftsmanship and finishing can make a major difference between bronze products?',
+    'Did you know a beautiful bronze finish does not necessarily mean the object was made using the same process as another bronze piece?',
+    'Have you ever wondered whether that “antique” look is natural aging or an intentionally created finish?',
+    'Did you know patina can be natural or intentionally developed by artisans?',
+    'Have you wondered why knowing the material and manufacturing process matters when buying a bronze object?',
+    'Did you know a handcrafted bronze piece can have subtle variations that make every piece slightly individual?',
+    'Have you ever wondered what makes one bronze vessel feel more premium than another?',
+
+    // 🤯 SURPRISING FACTS
+
+    'Did you know bronze is not one single metal but a family of copper-based alloys?',
+    'Have you ever wondered why the Bronze Age is actually named after a material rather than a civilization?',
+    'Did you know bronze technology changed tools, weapons, agriculture, and ceremonial objects in ancient societies?',
+    'Have you wondered how ancient craftsmen worked with molten metal without modern temperature sensors?',
+    'Did you know some ancient bronze workshops were complex operations involving mining, furnaces, molds, casting, and finishing?',
+    'Have you ever wondered how archaeologists can tell how an ancient bronze object was manufactured?',
+    'Did you know casting seams, tool marks, and surface details can reveal how a bronze object was made?',
+    'Did you know large bronze sculptures are often hollow rather than completely solid?',
+    'Have you wondered why making a giant bronze sculpture does not require filling the entire sculpture with metal?',
+    'Did you know large bronze sculptures can be cast in multiple sections and assembled afterward?',
+    'Have you ever wondered how a bronze statue can survive outdoors for decades while still changing appearance?',
+    'Did you know bronze can be durable without being completely corrosion-proof?',
+    'Have you wondered why the same bronze object can look different after years in different environments?',
+    'Did you know rain, humidity, salts, pollution, and air chemistry can influence how bronze ages?',
+    'Have you ever wondered why coastal bronze objects can age differently from bronze objects kept inland?',
+
+    // ❤️ EMOTIONAL / STORY-BASED
+
+    'What if the object you buy today becomes something your children remember from your home?',
+    'Have you ever wondered which objects in your home will still be there 20 years from now?',
+    'Did you know some of the most valuable traditional objects are valuable because of the stories attached to them?',
+    'Have you ever noticed how an everyday object can become special simply because your family used it for years?',
+    'What makes a product an heirloom—the material, the craftsmanship, or the memories created around it?',
+    'Have you ever wondered why people keep old metal vessels even when newer alternatives are available?',
+    'Did you know bronze is one of those materials where age can become part of the beauty?',
+    'Have you ever imagined your bronze piece becoming part of your family’s festive traditions?',
+    'What if your next पूजा vessel is not just something you use, but something your family keeps?',
+  ];
+
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -365,6 +209,22 @@ export default function ChatBot() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  
+  const handleOpenChat = () => {
+    setIsOpen(true);
+
+    if (!hasStartedConversation && randomFact) {
+      setHasStartedConversation(true);
+
+      setMessages([
+        { role: 'assistant', content: randomFact }
+      ]);
+
+      setConversationHistory([
+        { role: 'assistant', content: randomFact }
+      ]);
+    }
   };
 
   useEffect(() => {
@@ -493,17 +353,36 @@ export default function ChatBot() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              className="fixed bottom-24 right-6 z-50 max-w-xs bg-gradient-to-r from-amber-900 to-amber-800 text-amber-100 px-4 py-3 rounded-xl shadow-2xl border border-amber-600/30 text-sm"
+              onClick={() => {
+                setIsOpen(true);
+
+                if (!hasStartedConversation && randomFact) {
+                  setHasStartedConversation(true);
+
+                  setMessages([
+                    { role: 'assistant', content: randomFact }
+                  ]);
+
+                  setConversationHistory([
+                    { role: 'assistant', content: randomFact }
+                  ]);
+                }
+              }}
+              className="fixed bottom-24 right-6 z-50 max-w-xs cursor-pointer bg-gradient-to-r from-amber-900 to-amber-800 text-amber-100 px-4 py-3 rounded-xl shadow-2xl border border-amber-600/30 text-sm"
             >
               <p className="font-medium">
                 {displayedFact}
                 {isTypingFact && <span className="animate-pulse">|</span>}
               </p>
+
               <p className="text-amber-300 text-xs mt-1">
-                {isTypingFact ? 'Typing...' : 'Click to know more about this!'}
+                {isTypingFact
+                  ? 'Typing...'
+                  : 'Click to know more about this!'}
               </p>
             </motion.div>
-            
+
+            {/* Logo */}
             <motion.button
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -512,17 +391,27 @@ export default function ChatBot() {
               whileTap={{ scale: 0.9 }}
               onClick={() => {
                 setIsOpen(true);
+
                 if (!hasStartedConversation && randomFact) {
                   setHasStartedConversation(true);
-                  // Add the random fact as the first ASSISTANT message
-                  setMessages([{ role: 'assistant', content: randomFact }]);
-                  // Add to conversation history
-                  setConversationHistory([{ role: 'assistant', content: randomFact }]);
+
+                  setMessages([
+                    { role: 'assistant', content: randomFact }
+                  ]);
+
+                  setConversationHistory([
+                    { role: 'assistant', content: randomFact }
+                  ]);
                 }
               }}
               className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full shadow-2xl flex items-center justify-center border-2 border-amber-400/30"
             >
-              <img src="/logo.png" alt="LOGO" width="50" height="50" />
+              <img
+                src="/logo.png"
+                alt="LOGO"
+                width="50"
+                height="50"
+              />
             </motion.button>
           </>
         )}
