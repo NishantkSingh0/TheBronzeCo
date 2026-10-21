@@ -1,4 +1,4 @@
-const image = (filename) => `/Collections/${encodeURIComponent(filename)}.png`;
+const image = (filename) => `/Collections/${encodeURIComponent(filename)}.webp`;
 
 export const collections = [
   {
