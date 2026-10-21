@@ -1,11 +1,11 @@
 // Each link maps to the section id it should scroll to
 const NAV = {
   Collections: [
-    { label: 'Vivaah',               href: '#collections' },
-    { label: 'Griha Pravesh',         href: '#collections' },
-    { label: 'Gifting',               href: '#gifting'     },
-    { label: 'Festive',               href: '#collections' },
-    { label: 'Everyday & Wellness',   href: '#collections' },
+    { label: 'Drinkware & Jugs',    href: '#category-drinkware' },
+    { label: 'Dining & Bowls',      href: '#category-dining' },
+    { label: 'Serveware',           href: '#category-serveware' },
+    { label: 'Sacred & Ritual',     href: '#category-sacred' },
+    { label: 'Sculptures & Décor',  href: '#category-decor' },
   ],
   'Our Brand': [
     { label: 'Our Story',        href: '#story'      },
@@ -25,6 +25,10 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   const scrollTo = (id) => {
+    if (id.startsWith('#category-')) {
+      window.dispatchEvent(new CustomEvent('collection-browse', { detail: id.replace('#category-', '') }));
+      return;
+    }
     const el = document.querySelector(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };

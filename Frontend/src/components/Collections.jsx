@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { collections } from '../data/collections';
 import CollectionModal from './CollectionModal';
 
@@ -76,121 +76,174 @@ const CollectionIllustration = ({ id }) => {
 
 export default function Collections() {
   const [selected, setSelected] = useState(null);
+  const [category, setCategory] = useState('all');
+  const [query, setQuery] = useState('');
+  const catalogue = useRef(null);
+
+  useEffect(() => {
+    const handleBrowse = ({ detail }) => {
+      if (!collections.some((col) => col.id === detail)) return;
+      setCategory(detail);
+      setQuery('');
+      catalogue.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    window.addEventListener('collection-browse', handleBrowse);
+    return () => window.removeEventListener('collection-browse', handleBrowse);
+  }, []);
+
+  const total = collections.reduce((count, col) => count + col.products.length, 0);
+  const search = query.trim().toLowerCase();
+  const visible = collections
+    .filter((col) => category === 'all' || col.id === category)
+    .map((col) => ({ ...col, products: col.products.filter((product) =>
+      [product.name, product.desc, product.material, product.finish, col.title]
+        .join(' ').toLowerCase().includes(search)) }))
+    .filter((col) => col.products.length);
+  const resultCount = visible.reduce((count, col) => count + col.products.length, 0);
+
+  const browseCategory = (id) => {
+    setCategory(id);
+    setQuery('');
+    catalogue.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
-    <section id="collections" className="py-24 px-6 bg-brown-900">
-      <div className="max-w-7xl mx-auto">
+    <section id="collections" className="bg-cream-100 scroll-mt-20">
+      <div className="bg-brown-900 px-6 pt-24 pb-16 md:pb-20">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+            <div className="max-w-2xl">
+              <p className="section-label text-brown-300 mb-5">The Bronze Co / Our Collections</p>
+              <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light text-cream-100 leading-tight">
+                Objects for living.<br /><span className="italic text-brown-300">Pieces worth keeping.</span>
+              </h2>
+            </div>
+            <div className="max-w-sm">
+              <p className="text-cream-300 text-sm leading-relaxed font-light">
+                For the table, the everyday ritual and the thoughtfully made home.
+                Explore our collection, one considered piece at a time.
+              </p>
+              <p className="mt-5 text-brown-300 text-[10px] uppercase tracking-widest2">
+                {String(collections.length).padStart(2, '0')} collections <span className="mx-3">/</span> {total} designs to discover
+              </p>
+            </div>
+          </div>
 
-        {/* Header */}
-        <div className="text-center mb-16 reveal">
-          <p className="section-label text-brown-300 mb-4">Our Collections</p>
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-light text-cream-100 leading-tight">
-            Five Occasions.<br />
-            <span className="italic text-brown-300">One Sacred Metal.</span>
-          </h2>
-          <span className="divider-line bg-brown-400" />
-          <p className="font-sans text-cream-400/70 text-sm max-w-xl mx-auto leading-relaxed font-light">
-            From the wedding thali to the morning ritual glass ,  each collection is
-            built around the moments that matter most in Indian life.
-          </p>
+          {/* Featured large card + 2 below */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+            {collections.map((col, i) => {
+              const c = COLLECTION_COLORS[i];
+              return (
+                <button key={col.id} type="button" onClick={() => browseCategory(col.id)}
+                  className={`collection-card group relative text-left bg-cream-100 border ${c.border} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brown-300 ${i === 4 ? 'col-span-2 md:col-span-1' : ''}`}>
+                  {/* Illustration background */}
+                  <div className="relative aspect-[4/3] bg-cream-200 overflow-hidden">
+                    <img src={col.cover} alt={col.title} loading="lazy" decoding="async" width="600" height="450"
+                      className="card-img w-full h-full object-contain" />
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-brown-800/5 group-hover:bg-transparent transition-colors" />
+                  </div>
+                  {/* Content */}
+                  <div className="p-4 md:p-5">
+                    <p className="text-[9px] uppercase tracking-widest text-brown-600 mb-2">{col.products.length} designs</p>
+                    <h3 className="font-serif text-xl md:text-2xl text-brown-800 leading-tight">{col.title}</h3>
+                    <span className="block text-[10px] uppercase tracking-widest text-brown-600 mt-4 group-hover:text-brown-800">Explore collection <span aria-hidden="true">↗</span></span>
+                  </div>
+                  {/* Number badge */}
+                  <span className="absolute top-2 left-2 bg-cream-100/95 px-2 py-1 font-serif text-sm text-brown-800" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
+      </div>
 
-        {/* Featured large card + 2 below */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brown-700/30">
-          {collections.map((col, i) => {
-            const c = COLLECTION_COLORS[i];
-            return (
-              <div
-                key={col.id}
-                className={`collection-card relative overflow-hidden cursor-pointer group ${c.bg} ${
-                  i === 0 ? 'md:col-span-2 min-h-[420px]' : 'min-h-[320px]'
-                } reveal delay-${Math.min(i * 100, 400)}`}
-                onClick={() => setSelected(col)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && setSelected(col)}
-              >
-                {/* Illustration background */}
-                <div className={`absolute inset-0 flex items-center justify-end pr-12 ${c.text} pointer-events-none`}>
-                  <div className="w-48 h-48 md:w-64 md:h-64">
-                    <CollectionIllustration id={col.id} />
-                  </div>
+      <div ref={catalogue} id="collection-catalogue" className="max-w-7xl mx-auto px-6 py-14 md:py-20 scroll-mt-24">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div>
+            <p className="section-label mb-3">Find your piece</p>
+            <h3 className="font-serif text-4xl md:text-5xl text-brown-800">The collection edit</h3>
+          </div>
+          <label className="flex items-center gap-3 border-b border-brown-200 pb-3 w-full md:w-80 text-brown-600 focus-within:border-brown-600">
+            <svg aria-hidden="true" className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
+            <span className="sr-only">Search collection pieces</span>
+            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search bowls, birds, kansa…"
+              className="bg-transparent w-full text-sm outline-none placeholder:text-brown-600" />
+          </label>
+        </div>
+        <div className="flex flex-wrap gap-2 border-b border-cream-300 pb-6" role="group" aria-label="Filter collections">
+          {[{ id: 'all', title: 'All pieces', products: { length: total } }, ...collections].map((col) => (
+            <button key={col.id} type="button" aria-pressed={category === col.id} onClick={() => setCategory(col.id)}
+              className={`px-4 py-2.5 text-xs border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown-600 ${category === col.id ? 'bg-brown-800 text-cream-100 border-brown-800' : 'border-cream-300 text-brown-700 hover:border-brown-400'}`}>
+              {col.title} <span className="ml-2 opacity-70">{col.products.length}</span>
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-brown-600 py-5" role="status" aria-live="polite">
+          {resultCount} {resultCount === 1 ? 'piece' : 'pieces'}{search ? ` matching “${query.trim()}”` : ' to explore'}
+          <span className="hidden sm:inline"> <span className="mx-2">/</span> Select a piece for design details & materials</span>
+        </p>
+
+        <div className="space-y-16">
+          {visible.map((col) => (
+            <section key={col.id} aria-labelledby={`category-${col.id}`}>
+              <div className="flex items-center justify-between gap-6 mb-7 border-t border-cream-300 pt-7">
+                <div className="max-w-2xl">
+                  <p className="text-[10px] uppercase tracking-widest2 text-brown-600 mb-2">{col.label}</p>
+                  <h4 id={`category-${col.id}`} className="font-serif text-3xl md:text-4xl text-brown-800 mb-2">{col.title}</h4>
+                  <p className="text-sm text-brown-600 leading-relaxed font-light">{col.description}</p>
                 </div>
-
-                {/* Hover overlay */}
-                <div
-                  className={`card-overlay absolute inset-0 opacity-0 ${
-                    i % 2 === 0
-                      ? 'bg-gradient-to-r from-brown-900/80 to-transparent'
-                      : 'bg-gradient-to-r from-brown-900/70 to-transparent'
-                  }`}
-                />
-
-                {/* Content */}
-                <div className="relative z-10 p-10 md:p-12 h-full flex flex-col justify-between">
-                  <div>
-                    <p className={`font-sans text-xs tracking-widest2 uppercase mb-3 ${c.accent}`}>
-                      {col.label}
-                    </p>
-                    <h3 className={`font-serif text-3xl md:text-4xl font-light mb-2 ${c.text}`}>
-                      {col.title}
-                    </h3>
-                    <p className={`font-serif italic text-lg font-light mb-4 ${c.accent}`}>
-                      {col.subtitle}
-                    </p>
-                    <p className={`font-sans text-sm leading-relaxed font-light max-w-md ${
-                      c.text === 'text-cream-100' ? 'text-cream-300/80' : 'text-brown-600'
-                    }`}>
-                      {col.description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-8">
-                    <span className={`font-sans text-[10px] tracking-widest3 uppercase ${c.accent}`}>
-                      {col.accent}
-                    </span>
-                    <button
-                      className={`font-sans text-xs tracking-widest2 uppercase flex items-center gap-2 transition-colors duration-200 ${
-                        c.text === 'text-cream-100'
-                          ? 'text-cream-300 group-hover:text-brown-300'
-                          : 'text-brown-600 group-hover:text-brown-400'
-                      }`}
-                    >
-                      View Collection
-                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Number badge */}
-                <div className={`absolute top-6 right-8 font-serif text-7xl font-light opacity-10 ${c.text} select-none pointer-events-none`}>
-                  {String(i + 1).padStart(2, '0')}
-                </div>
+                <div className="w-20 h-20 hidden md:block text-brown-600 shrink-0" aria-hidden="true"><CollectionIllustration id={col.icon} /></div>
               </div>
-            );
-          })}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {col.products.map((product) => (
+                  <button key={product.id} type="button" onClick={() => setSelected({ collection: collections.find((item) => item.id === col.id), product })}
+                    className="collection-card group text-left flex flex-col bg-white border border-cream-300 hover:border-brown-300 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brown-600">
+                    <div className="aspect-[4/3] bg-cream-200/40 overflow-hidden w-full border-b border-cream-300">
+                      <img src={product.image} alt={product.name} loading="lazy" decoding="async" width="600" height="450"
+                        className="card-img w-full h-full object-contain motion-reduce:transform-none" />
+                    </div>
+                    <div className="p-5 md:p-6 flex flex-col flex-1 w-full">
+                      <p className="text-[9px] uppercase tracking-widest text-brown-600 mb-2">{product.material}</p>
+                      <h5 className="font-serif text-2xl leading-tight text-brown-800 mb-3">{product.name}</h5>
+                      <p className="text-sm leading-relaxed text-brown-600 font-light line-clamp-2">{product.desc}</p>
+                      <div className="mt-auto pt-5">
+                        <p className="text-[10px] text-brown-600 border-t border-cream-300 pt-3">{product.finish}</p>
+                        <div className="flex items-center justify-between gap-2 mt-4">
+                          <span className="text-[10px] text-brown-600">Price on enquiry</span>
+                          <span className="text-[10px] tracking-widest uppercase text-brown-800">View piece <span aria-hidden="true" className="inline-block group-hover:translate-x-1 transition-transform">→</span></span>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
+        {!resultCount && (
+          <div className="text-center border border-cream-300 px-6 py-16">
+            <h4 className="font-serif text-3xl text-brown-800 mb-3">A different search, perhaps?</h4>
+            <p className="text-sm text-brown-600 mb-6">Try “bowl”, “marble” or “patinated”, or explore all our pieces.</p>
+            <button type="button" className="btn-outline" onClick={() => { setCategory('all'); setQuery(''); }}>Reset filters</button>
+          </div>
+        )}
 
         {/* Bottom CTA */}
-        <div className="text-center mt-14 reveal">
-          <p className="font-sans text-brown-400 text-xs tracking-widest uppercase mb-6">
-            All products carry the Purity Passport ,  QR-linked lab certificate
-          </p>
-          <button
-            className="btn-light"
-            onClick={() => document.querySelector('#purity')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Learn About Purity Passport
-          </button>
+        <div className="mt-16 bg-brown-800 p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="max-w-2xl">
+            <p className="section-label text-brown-300 mb-3">Materials, thoughtfully considered</p>
+            <h3 className="font-serif text-3xl md:text-4xl text-cream-100 mb-4">Know the piece. Love it for longer.</h3>
+            <p className="text-sm text-cream-300 leading-relaxed font-light">Pure kansa and bronze sit alongside marble, wood and glass in this collection. Each piece has its own material note. Patina, polish and colour describe a finish—not proof of composition. Ask us about material documentation and care before ordering.</p>
+          </div>
+          <button type="button" className="btn-light shrink-0" onClick={() => document.querySelector('#purity')?.scrollIntoView({ behavior: 'smooth' })}>Our approach to purity</button>
         </div>
       </div>
 
       {/* Collection detail modal */}
-      {selected && (
-        <CollectionModal collection={selected} onClose={() => setSelected(null)} />
-      )}
+      {selected && <CollectionModal collection={selected.collection} product={selected.product} onClose={() => setSelected(null)}
+        onSelect={(product) => setSelected((current) => ({ ...current, product }))} />}
     </section>
   );
 }

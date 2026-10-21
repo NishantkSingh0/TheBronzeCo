@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ENQUIRY_TYPES = [
   'Product / Collection Enquiry',
@@ -18,6 +18,19 @@ export default function Contact() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const handleCollectionEnquiry = ({ detail }) => {
+      setSubmitted(false);
+      setForm((prev) => ({
+        ...prev,
+        type: 'Product / Collection Enquiry',
+        message: `${prev.message ? `${prev.message}\n\n` : ''}I am interested in ${detail.name} from ${detail.collection}. Please share pricing, dimensions, availability, material documentation and care details.`,
+      }));
+    };
+    window.addEventListener('collection-enquiry', handleCollectionEnquiry);
+    return () => window.removeEventListener('collection-enquiry', handleCollectionEnquiry);
+  }, []);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
