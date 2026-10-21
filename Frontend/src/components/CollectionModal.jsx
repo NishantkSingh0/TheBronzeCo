@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import Cursor from './Cursor';
 
 export default function CollectionModal({ collection: col, product, onClose, onSelect }) {
   const dialog = useRef(null);
@@ -44,6 +45,7 @@ export default function CollectionModal({ collection: col, product, onClose, onS
   return (
     <dialog ref={dialog} onCancel={cancel} aria-labelledby="piece-title" aria-describedby="piece-description"
       className="fixed inset-0 m-0 w-full h-full max-w-none max-h-none bg-transparent p-3 sm:p-6 md:p-10 open:flex items-center justify-center backdrop:bg-brown-900/80 backdrop:backdrop-blur-sm">
+      <Cursor />
       {/* Backdrop */}
       <div className="absolute inset-0" aria-hidden="true" onClick={onClose} />
 

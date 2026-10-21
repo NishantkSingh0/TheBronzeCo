@@ -74,17 +74,43 @@ const CollectionIllustration = ({ id }) => {
   return map[id] || null;
 };
 
+const shuffle = (items) => {
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 export default function Collections() {
+  const [orderedCollections] = useState(() => shuffle(collections).map((col) => ({ ...col, products: shuffle(col.products) })));
+  const [allProducts] = useState(() => shuffle(orderedCollections.flatMap((col) => col.products.map((product) => ({ ...product, collectionId: col.id })))));
   const [selected, setSelected] = useState(null);
   const [category, setCategory] = useState('all');
   const [query, setQuery] = useState('');
+  const [expanded, setExpanded] = useState(false);
+  const [previewLimit, setPreviewLimit] = useState(() => window.innerWidth >= 1024 ? 6 : window.innerWidth >= 640 ? 4 : 2);
   const catalogue = useRef(null);
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const tablet = window.matchMedia('(min-width: 640px)');
+    const updateLimit = () => setPreviewLimit(desktop.matches ? 6 : tablet.matches ? 4 : 2);
+    desktop.addEventListener('change', updateLimit);
+    tablet.addEventListener('change', updateLimit);
+    return () => {
+      desktop.removeEventListener('change', updateLimit);
+      tablet.removeEventListener('change', updateLimit);
+    };
+  }, []);
 
   useEffect(() => {
     const handleBrowse = ({ detail }) => {
       if (!collections.some((col) => col.id === detail)) return;
       setCategory(detail);
       setQuery('');
+      setExpanded(false);
       catalogue.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
     window.addEventListener('collection-browse', handleBrowse);
@@ -93,23 +119,31 @@ export default function Collections() {
 
   const total = collections.reduce((count, col) => count + col.products.length, 0);
   const search = query.trim().toLowerCase();
-  const visible = collections
+  const visible = orderedCollections
     .filter((col) => category === 'all' || col.id === category)
     .map((col) => ({ ...col, products: col.products.filter((product) =>
       [product.name, product.desc, product.material, product.finish, col.title]
         .join(' ').toLowerCase().includes(search)) }))
     .filter((col) => col.products.length);
   const resultCount = visible.reduce((count, col) => count + col.products.length, 0);
+  const matchingIds = new Set(visible.flatMap((col) => col.products.map((product) => product.id)));
+  const groups = category === 'all'
+    ? [{ id: 'all', products: allProducts.filter((product) => matchingIds.has(product.id)) }]
+    : visible;
+
+  const canExpand = resultCount > previewLimit;
+  const shownCount = expanded ? resultCount : Math.min(resultCount, previewLimit);
 
   const browseCategory = (id) => {
     setCategory(id);
     setQuery('');
+    setExpanded(false);
     catalogue.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
     <section id="collections" className="bg-cream-100 scroll-mt-20">
-      <div className="bg-brown-900 px-6 pt-24 pb-16 md:pb-20">
+      <div className="bg-brown-900 px-6 pt-24 pb-20 md:pb-24">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
@@ -132,23 +166,23 @@ export default function Collections() {
 
           {/* Featured large card + 2 below */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-            {collections.map((col, i) => {
+            {orderedCollections.map((col, i) => {
               const c = COLLECTION_COLORS[i];
               return (
                 <button key={col.id} type="button" onClick={() => browseCategory(col.id)}
-                  className={`collection-card group relative text-left bg-cream-100 border ${c.border} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brown-300 ${i === 4 ? 'col-span-2 md:col-span-1' : ''}`}>
+                  className={`collection-card group relative flex flex-col self-stretch text-left bg-cream-100 border ${c.border} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brown-300`}>
                   {/* Illustration background */}
-                  <div className="relative aspect-[4/3] bg-cream-200 overflow-hidden">
-                    <img src={col.cover} alt={col.title} loading="lazy" decoding="async" width="600" height="450"
-                      className="card-img w-full h-full object-contain" />
+                  <div className="relative w-full shrink-0 bg-brown-900">
+                    <img src={col.cover} alt={col.title} loading="lazy" decoding="async"
+                      className="block w-full h-auto" />
                     {/* Hover overlay */}
                     <div className="absolute inset-0 bg-brown-800/5 group-hover:bg-transparent transition-colors" />
                   </div>
                   {/* Content */}
-                  <div className="p-4 md:p-5">
+                  <div className="p-4 md:p-5 flex flex-col flex-1 w-full">
                     <p className="text-[9px] uppercase tracking-widest text-brown-600 mb-2">{col.products.length} designs</p>
                     <h3 className="font-serif text-xl md:text-2xl text-brown-800 leading-tight">{col.title}</h3>
-                    <span className="block text-[10px] uppercase tracking-widest text-brown-600 mt-4 group-hover:text-brown-800">Explore collection <span aria-hidden="true">↗</span></span>
+                    <span className="block text-[10px] uppercase tracking-widest text-brown-600 mt-auto pt-4 group-hover:text-brown-800">Explore collection <span aria-hidden="true">↗</span></span>
                   </div>
                   {/* Number badge */}
                   <span className="absolute top-2 left-2 bg-cream-100/95 px-2 py-1 font-serif text-sm text-brown-800" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
@@ -159,7 +193,7 @@ export default function Collections() {
         </div>
       </div>
 
-      <div ref={catalogue} id="collection-catalogue" className="max-w-7xl mx-auto px-6 py-14 md:py-20 scroll-mt-24">
+      <div ref={catalogue} id="collection-catalogue" className="max-w-7xl mx-auto px-6 pt-16 pb-14 md:pt-24 md:pb-20 scroll-mt-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
             <p className="section-label mb-3">Find your piece</p>
@@ -168,37 +202,37 @@ export default function Collections() {
           <label className="flex items-center gap-3 border-b border-brown-200 pb-3 w-full md:w-80 text-brown-600 focus-within:border-brown-600">
             <svg aria-hidden="true" className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
             <span className="sr-only">Search collection pieces</span>
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search bowls, birds, kansa…"
+            <input type="search" value={query} onChange={(e) => { setQuery(e.target.value); setExpanded(false); }} placeholder="Search bowls, birds, kansa…"
               className="bg-transparent w-full text-sm outline-none placeholder:text-brown-600" />
           </label>
         </div>
         <div className="flex flex-wrap gap-2 border-b border-cream-300 pb-6" role="group" aria-label="Filter collections">
-          {[{ id: 'all', title: 'All pieces', products: { length: total } }, ...collections].map((col) => (
-            <button key={col.id} type="button" aria-pressed={category === col.id} onClick={() => setCategory(col.id)}
+          {[{ id: 'all', title: 'All pieces', products: { length: total } }, ...orderedCollections].map((col) => (
+            <button key={col.id} type="button" aria-pressed={category === col.id} onClick={() => { setCategory(col.id); setExpanded(false); }}
               className={`px-4 py-2.5 text-xs border transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown-600 ${category === col.id ? 'bg-brown-800 text-cream-100 border-brown-800' : 'border-cream-300 text-brown-700 hover:border-brown-400'}`}>
               {col.title} <span className="ml-2 opacity-70">{col.products.length}</span>
             </button>
           ))}
         </div>
         <p className="text-xs text-brown-600 py-5" role="status" aria-live="polite">
-          {resultCount} {resultCount === 1 ? 'piece' : 'pieces'}{search ? ` matching “${query.trim()}”` : ' to explore'}
+          Showing {shownCount} of {resultCount} {resultCount === 1 ? 'piece' : 'pieces'}{search ? ` matching “${query.trim()}”` : ' to explore'}
           <span className="hidden sm:inline"> <span className="mx-2">/</span> Select a piece for design details & materials</span>
         </p>
 
-        <div className="space-y-16">
-          {visible.map((col) => (
-            <section key={col.id} aria-labelledby={`category-${col.id}`}>
-              <div className="flex items-center justify-between gap-6 mb-7 border-t border-cream-300 pt-7">
+        <div id="collection-products" className="space-y-16">
+          {groups.map((col) => (
+            <section key={col.id} aria-label={category === 'all' ? 'All collection pieces' : undefined} aria-labelledby={category === 'all' ? undefined : `category-${col.id}`}>
+              {category !== 'all' && <div className="flex items-center justify-between gap-6 mb-7 border-t border-cream-300 pt-7">
                 <div className="max-w-2xl">
                   <p className="text-[10px] uppercase tracking-widest2 text-brown-600 mb-2">{col.label}</p>
                   <h4 id={`category-${col.id}`} className="font-serif text-3xl md:text-4xl text-brown-800 mb-2">{col.title}</h4>
                   <p className="text-sm text-brown-600 leading-relaxed font-light">{col.description}</p>
                 </div>
                 <div className="w-20 h-20 hidden md:block text-brown-600 shrink-0" aria-hidden="true"><CollectionIllustration id={col.icon} /></div>
-              </div>
+              </div>}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {col.products.map((product) => (
-                  <button key={product.id} type="button" onClick={() => setSelected({ collection: collections.find((item) => item.id === col.id), product })}
+                {(expanded ? col.products : col.products.slice(0, previewLimit)).map((product) => (
+                  <button key={product.id} type="button" onClick={() => setSelected({ collection: orderedCollections.find((item) => item.id === (product.collectionId || col.id)), product })}
                     className="collection-card group text-left flex flex-col bg-white border border-cream-300 hover:border-brown-300 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brown-600">
                     <div className="aspect-[4/3] bg-cream-200/40 overflow-hidden w-full border-b border-cream-300">
                       <img src={product.image} alt={product.name} loading="lazy" decoding="async" width="600" height="450"
@@ -222,11 +256,39 @@ export default function Collections() {
             </section>
           ))}
         </div>
+        {canExpand && (
+          <div className="relative isolate mt-8 overflow-hidden border border-cream-300 bg-white/60 px-6 py-8 md:py-10 text-center backdrop-blur-xl shadow-[0_12px_40px_-24px_rgba(61,26,0,0.2)]">
+            <div aria-hidden="true" className="pointer-events-none absolute -inset-8 -z-10 bg-gradient-to-r from-cream-200/80 via-white/50 to-brown-100/50 blur-2xl" />
+            <p className="section-label text-brown-600 mb-3">{expanded ? 'The complete edit' : 'A little more to discover'}</p>
+            <p className="font-serif text-2xl md:text-3xl text-brown-800 mb-5">{expanded ? 'Every piece, in view.' : `${resultCount - shownCount} more considered pieces await.`}</p>
+            <button
+              type="button"
+              aria-expanded={expanded}
+              aria-controls="collection-products"
+              className="btn-primary inline-flex items-center justify-center gap-3 animate-pulse"
+              onClick={() => {
+                setExpanded((current) => !current);
+                if (expanded) {
+                  catalogue.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                  });
+                }
+              }}
+            >
+              {expanded ? 'Show fewer pieces' : `View all ${resultCount} pieces`}
+              <svg aria-hidden="true" className={`w-4 h-4 transition-transform motion-reduce:transition-none ${   expanded ? 'rotate-180' : '' }`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" >
+                <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
         {!resultCount && (
           <div className="text-center border border-cream-300 px-6 py-16">
             <h4 className="font-serif text-3xl text-brown-800 mb-3">A different search, perhaps?</h4>
             <p className="text-sm text-brown-600 mb-6">Try “bowl”, “marble” or “patinated”, or explore all our pieces.</p>
-            <button type="button" className="btn-outline" onClick={() => { setCategory('all'); setQuery(''); }}>Reset filters</button>
+            <button type="button" className="btn-outline" onClick={() => { setCategory('all'); setQuery(''); setExpanded(false); }}>Reset filters</button>
           </div>
         )}
 
