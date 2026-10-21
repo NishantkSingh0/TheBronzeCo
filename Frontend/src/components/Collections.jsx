@@ -287,7 +287,7 @@ export default function Collections() {
         {!resultCount && (
           <div className="text-center border border-cream-300 px-6 py-16">
             <h4 className="font-serif text-3xl text-brown-800 mb-3">A different search, perhaps?</h4>
-            <p className="text-sm text-brown-600 mb-6">Try “bowl”, “marble” or “patinated”, or explore all our pieces.</p>
+            <p className="text-sm text-brown-600 mb-6">Try “bowl”, “marble” or “patinated”, or explore all our pieces..</p>
             <button type="button" className="btn-outline" onClick={() => { setCategory('all'); setQuery(''); setExpanded(false); }}>Reset filters</button>
           </div>
         )}
