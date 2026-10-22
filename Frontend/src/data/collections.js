@@ -12,6 +12,20 @@ export const collections = [
     icon: 'everyday',
     products: [
       {
+        id: 'vase',
+        name: 'Wave-Line Sculptural Vase',
+        image: image('Vass 1'),
+        desc:
+          'A pear-shaped vase with a slender concave neck, asymmetric pouring-style lip and low foot ring. A single sinuous groove travels around the lower body, giving the brushed metallic surface an elegant, flowing accent.',
+        highlight:
+          'The tilted lip and sweeping wave line introduce movement into an otherwise restrained vessel.',
+        finish: 'Asymmetric lip · Single wave groove · Brushed body',
+        material: 'Bronze-coloured metal (verify alloy)',
+        purity:
+          'Confirm the vessel’s actual material composition and water-holding suitability before recommending it for fresh flowers.',
+        use: 'Dried stems, console styling and standalone display',
+      },
+      {
         id: 'curvy-matte-glass',
         name: 'Contour Matte Tumbler',
         image: image('Curvy Matt Glass'),
@@ -426,20 +440,6 @@ export const collections = [
         purity:
           'Confirm the cat’s underlying metal composition, stone specification and included pieces with the supplier.',
         use: 'Animal-lover gifts, side tables and characterful shelves',
-      },
-      {
-        id: 'vase',
-        name: 'Wave-Line Sculptural Vase',
-        image: image('Vass 1'),
-        desc:
-          'A pear-shaped vase with a slender concave neck, asymmetric pouring-style lip and low foot ring. A single sinuous groove travels around the lower body, giving the brushed metallic surface an elegant, flowing accent.',
-        highlight:
-          'The tilted lip and sweeping wave line introduce movement into an otherwise restrained vessel.',
-        finish: 'Asymmetric lip · Single wave groove · Brushed body',
-        material: 'Bronze-coloured metal (verify alloy)',
-        purity:
-          'Confirm the vessel’s actual material composition and water-holding suitability before recommending it for fresh flowers.',
-        use: 'Dried stems, console styling and standalone display',
       },
     ],
   },
