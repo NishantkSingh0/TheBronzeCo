@@ -49,7 +49,7 @@ export default function Navbar() {
             />
             <div className="flex flex-col leading-none">
               <span className="font-serif text-cream-100 text-lg font-bold tracking-wider">
-                The Bronze Co
+                The Bronze Co.
               </span>
               <span className="font-sans text-brown-300 font-bold text-[10px] tracking-widest2 uppercase">
                 Ancient Alloy, Everyday Table.
