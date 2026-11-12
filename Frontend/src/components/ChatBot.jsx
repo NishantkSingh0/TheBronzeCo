@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000').replace(/\/$/, '');
 const CHAT_ENDPOINT = `${API_BASE_URL}/api/chat/`;
 const MAX_HISTORY_MESSAGES = 6;
+const CHAT_ERROR_MESSAGE = "Sorry, we're having a problem on our side. Please try again in a moment.";
 
 async function consumeChatStream(response, onEvent) {
   if (!response.body) {
@@ -299,7 +300,7 @@ export default function ChatBot() {
       });
 
       if (!response.ok) {
-        throw new Error(`Chat request failed with status ${response.status}.`);
+        throw new Error('Chat request failed.');
       }
 
       let botMessage = '';
@@ -326,10 +327,15 @@ export default function ChatBot() {
       });
     } catch (error) {
       console.error('Error sending message:', error);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: `Sorry, I couldn't complete that request. ${error.message}`,
-      }]);
+      setMessages(prev => {
+        const messagesWithoutPartialReply = prev[prev.length - 1]?.role === 'assistant'
+          ? prev.slice(0, -1)
+          : prev;
+        return [...messagesWithoutPartialReply, {
+          role: 'assistant',
+          content: CHAT_ERROR_MESSAGE,
+        }];
+      });
     } finally {
       setIsTyping(false);
     }
