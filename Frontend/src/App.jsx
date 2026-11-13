@@ -6,6 +6,7 @@ import Hero         from './components/Hero';
 import Story        from './components/Story';
 import WhyBronze    from './components/WhyBronze';
 import Collections  from './components/Collections';
+import ScrollFrames from './components/ScrollFrames';
 import PurityPassport from './components/PurityPassport';
 import Gifting      from './components/Gifting';
 import HoReCa       from './components/HoReCa';
@@ -28,6 +29,7 @@ export default function App() {
         <Hero />
         <Story />
         <WhyBronze />
+        <ScrollFrames />
         <Collections />
         <PurityPassport />
         <Gifting />
