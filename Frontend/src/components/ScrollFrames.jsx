@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react';
 
-const frames = Object.keys(import.meta.glob('/public/ScrollFrames/*.{png,webp,jpg,jpeg}'))
+const frameFiles = Object.keys(import.meta.glob('/public/ScrollFrames/*.{png,webp,jpg,jpeg}'));
+const preferredFrames = new Map();
+for (const path of frameFiles) {
+  const key = path.replace(/\.[^.]+$/, '');
+  if (!preferredFrames.has(key) || path.endsWith('.webp')) preferredFrames.set(key, path);
+}
+const frames = [...preferredFrames.values()]
   .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
   .map((path) => `${import.meta.env.BASE_URL}${path.replace('/public/', '')}`);
 
@@ -16,18 +22,30 @@ export default function ScrollFrames() {
     if (!context || !frames.length) return;
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const cache = new Map();
+    const pending = new Set();
+    const ready = new WeakSet();
+    const failed = new Set();
+    let direction = 1;
+    let lookAhead = 0;
     let current = 0;
     let position = 0;
     let lastTime = 0;
     let raf = 0;
     let active = true;
     let nearby = false;
+    const edgeMask = document.createElement('canvas');
+    const maskContext = edgeMask.getContext('2d');
+    let maskKey = '';
+    let lastDraw = '';
 
     const draw = () => {
       const image = cache.get(current);
       const next = cache.get(current + 1);
-      if (!active || !image?.complete || !image.naturalWidth) return;
-      const blend = next?.complete && next.naturalWidth ? position - current : 0;
+      if (!active || !image || !ready.has(image)) return;
+      const blend = next && ready.has(next) ? Math.round((position - current) * 100) / 100 : 0;
+      const drawKey = `${current}:${blend}:${canvas.width}:${canvas.height}`;
+      if (drawKey === lastDraw) return;
+      lastDraw = drawKey;
       const paint = (frame, opacity) => {
         const scale = Math.min(canvas.width / frame.naturalWidth, canvas.height / frame.naturalHeight);
         const width = frame.naturalWidth * scale;
@@ -49,41 +67,78 @@ export default function ScrollFrames() {
       const height = image.naturalHeight * scale;
       const left = (canvas.width - width) / 2;
       const top = (canvas.height - height) / 2;
-      const masks = [
-        context.createLinearGradient(left, 0, left + width, 0),
-        context.createLinearGradient(0, top, 0, top + height),
-      ];
-      for (const mask of masks) {
-        mask.addColorStop(0, 'rgba(0, 0, 0, 0)');
-        mask.addColorStop(0.04, 'rgba(0, 0, 0, 0.15)');
-        mask.addColorStop(0.12, 'rgba(0, 0, 0, 1)');
-        mask.addColorStop(0.88, 'rgba(0, 0, 0, 1)');
-        mask.addColorStop(0.96, 'rgba(0, 0, 0, 0.15)');
-        mask.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        context.fillStyle = mask;
-        context.fillRect(0, 0, canvas.width, canvas.height);
+      const geometryKey = `${canvas.width}:${canvas.height}:${width}:${height}`;
+      if (maskContext && maskKey !== geometryKey) {
+        edgeMask.width = canvas.width;
+        edgeMask.height = canvas.height;
+        const masks = [
+          maskContext.createLinearGradient(left, 0, left + width, 0),
+          maskContext.createLinearGradient(0, top, 0, top + height),
+        ];
+        for (const [index, mask] of masks.entries()) {
+          mask.addColorStop(0, 'rgba(0, 0, 0, 0)');
+          mask.addColorStop(0.04, 'rgba(0, 0, 0, 0.15)');
+          mask.addColorStop(0.12, 'rgba(0, 0, 0, 1)');
+          mask.addColorStop(0.88, 'rgba(0, 0, 0, 1)');
+          mask.addColorStop(0.96, 'rgba(0, 0, 0, 0.15)');
+          mask.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          maskContext.globalCompositeOperation = index === 0 ? 'source-over' : 'destination-in';
+          maskContext.fillStyle = mask;
+          maskContext.fillRect(0, 0, edgeMask.width, edgeMask.height);
+        }
+        maskKey = geometryKey;
       }
+      if (maskContext) context.drawImage(edgeMask, 0, 0);
       context.restore();
     };
 
     const load = () => {
-      const radius = motion.matches ? 0 : 8;
-      for (let distance = 0; distance <= radius; distance += 1) {
-        for (const index of new Set([current + distance, current - distance])) {
-          if (index < 0 || index >= frames.length || cache.has(index)) continue;
-          const image = new Image();
-          image.decoding = 'async';
-          image.onload = () => { if (index === current || index === current + 1) draw(); };
-          cache.set(index, image);
-          image.src = frames[index];
+      if (!active || !nearby) return;
+      const priorities = motion.matches ? [0] : [current, current + 1];
+      if (!motion.matches) {
+        for (let distance = 1; distance <= 16; distance += 1) {
+          priorities.push(current + distance * direction);
+          if (distance <= 6) priorities.push(current - distance * direction);
+        }
+        priorities.push(lookAhead, lookAhead + 1);
+        for (let distance = 1; distance <= 8; distance += 1) {
+          priorities.push(lookAhead + distance * direction);
         }
       }
+      const wanted = new Set(priorities.filter((index) => index >= 0 && index < frames.length));
       for (const [index, image] of cache) {
-        if (Math.abs(index - current) > 16) {
+        if (!wanted.has(index) && !pending.has(index)) {
           image.onload = null;
+          image.onerror = null;
           image.src = '';
           cache.delete(index);
         }
+      }
+      for (const index of wanted) {
+        if (pending.size >= 4) break;
+        if (cache.has(index) || failed.has(index)) continue;
+        const image = new Image();
+        image.decoding = 'async';
+        image.fetchPriority = index === current ? 'high' : 'low';
+        cache.set(index, image);
+        pending.add(index);
+        const finish = (success) => {
+          if (!active) return;
+          pending.delete(index);
+          image.onload = null;
+          image.onerror = null;
+          if (success) ready.add(image);
+          else {
+            failed.add(index);
+            cache.delete(index);
+          }
+          schedule();
+        };
+        image.onload = () => {
+          image.decode().then(() => finish(true), () => finish(false));
+        };
+        image.onerror = () => finish(false);
+        image.src = frames[index];
       }
     };
 
@@ -96,10 +151,13 @@ export default function ScrollFrames() {
       const rect = section.getBoundingClientRect();
       const distance = Math.max(1, section.offsetHeight - window.innerHeight);
       const progress = Math.max(0, Math.min(1, -rect.top / distance));
-      const target = motion.matches ? 0 : progress * (frames.length - 1);
+      const sequenceProgress = Math.max(0, Math.min(1, (progress - 0.03) / 0.89));
+      const target = motion.matches ? 0 : sequenceProgress * (frames.length - 1);
+      direction = target >= position ? 1 : -1;
+      lookAhead = Math.floor(target);
       const elapsed = lastTime ? Math.min(time - lastTime, 64) : 16;
       lastTime = time;
-      position += (target - position) * (1 - Math.exp(-elapsed / 75));
+      position += (target - position) * (1 - Math.exp(-elapsed / 45));
       if (motion.matches || Math.abs(target - position) < 0.005) position = target;
       current = Math.floor(position);
       progressRef.current.style.transform = `scaleX(${position / Math.max(1, frames.length - 1)})`;
@@ -110,15 +168,16 @@ export default function ScrollFrames() {
     };
     const schedule = () => { if (!raf) raf = requestAnimationFrame(update); };
     const resize = () => {
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(canvas.clientWidth * ratio);
-      canvas.height = Math.round(canvas.clientHeight * ratio);
+      lastDraw = '';
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5, 1280 / Math.max(1, canvas.clientWidth), 900 / Math.max(1, canvas.clientHeight));
+      canvas.width = Math.max(1, Math.round(canvas.clientWidth * ratio));
+      canvas.height = Math.max(1, Math.round(canvas.clientHeight * ratio));
       schedule();
     };
     const observer = new IntersectionObserver(([entry]) => {
       nearby = entry.isIntersecting;
       if (nearby) schedule();
-    }, { rootMargin: '600px' });
+    }, { rootMargin: '1500px' });
     const resizeObserver = new ResizeObserver(resize);
     observer.observe(section);
     resizeObserver.observe(canvas);
@@ -135,6 +194,7 @@ export default function ScrollFrames() {
       motion.removeEventListener('change', schedule);
       for (const image of cache.values()) {
         image.onload = null;
+        image.onerror = null;
         image.src = '';
       }
       cache.clear();

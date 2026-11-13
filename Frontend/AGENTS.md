@@ -4,4 +4,4 @@
 - Verify changes with `npm run build` and `npm run lint`.
 - Collection categories and product descriptions live in `src/data/collections.js`; product images live in `public/Collections/`. Keep image filenames and case intact.
 - The contact form currently uses local submitted state only; it is not connected to an enquiry delivery service.
-- The scroll sequence before Collections uses naturally sorted images from `public/ScrollFrames/`. Original supplied frames 046–092 were absent; serialization preserves the supplied order, not missing animation content.
+- The scroll sequence before Collections uses naturally sorted images from `public/ScrollFrames/`. Matching WebP filenames take priority over PNG/JPEG versions; rebuild after changing public frame assets because the file list is generated at build time. Original supplied frames 046–092 were absent; serialization preserves the supplied order, not missing animation content.
